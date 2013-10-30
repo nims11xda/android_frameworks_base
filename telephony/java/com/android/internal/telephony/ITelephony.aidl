@@ -335,5 +335,10 @@ interface ITelephony {
      */
     void setCellInfoListRate(int rateInMillis);
 
+    /**
+     * Toggle between 2G and 3G (NT_MODE_GSM, NT_MODE_WCDMA_PREF)
+     * @param boolean to turn on and off 2G
+     * @hide
+     */
+     void toggle2G(boolean on);
 }
-
