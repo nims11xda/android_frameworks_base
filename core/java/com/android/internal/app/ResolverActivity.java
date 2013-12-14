@@ -34,6 +34,7 @@ import android.content.pm.LabeledIntent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -130,7 +131,12 @@ public class ResolverActivity extends AlertActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState, Intent intent,
             CharSequence title, Intent[] initialIntents, List<ResolveInfo> rList,
             boolean alwaysUseOption) {
-        setTheme(R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+        if (getResources().getConfiguration().uiThemeMode
+                    == Configuration.UI_THEME_MODE_HOLO_DARK) {
+              setTheme(R.style.Theme_DeviceDefault_Dialog_Alert);
+        } else {
+              setTheme(R.style.Theme_DeviceDefault_Light_Dialog_Alert);
+        }
         super.onCreate(savedInstanceState);
         mReverseBehaviour = Settings.System.getInt(getContentResolver(),
                 Settings.System.REVERSE_DEFAULT_APP_PICKER, 0);
