@@ -139,8 +139,7 @@ public class NotificationViewManager {
         public void onNotificationPosted(final StatusBarNotification sbn) {
             boolean screenOffAndNotCovered = !mIsScreenOn && mTimeCovered == 0;
             if (mHostView.addNotification(sbn, screenOffAndNotCovered || mIsScreenOn,
-                        config.forceExpandedView) && config.wakeOnNotification && screenOffAndNotCovered
-                        && (!sbn.isOngoing() || !mHostView.containsNotification(sbn))) {
+                        config.forceExpandedView) && config.wakeOnNotification && screenOffAndNotCovered) {
                 wakeDevice();
             }
         }
