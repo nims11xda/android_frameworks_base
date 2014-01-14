@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 The Android Open Source Project
- * This code has been modified. Portions copyright (C) 2013, ParanoidAndroid Project.
+ * This code has been modified. Portions copyright (C) 2013-2014 ParanoidAndroid Project.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,9 @@ import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.RemoteException;
+import android.os.SystemClock;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.AlarmClock;
@@ -55,6 +57,7 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Profile;
 import android.provider.Settings;
 import android.security.KeyChain;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -68,6 +71,7 @@ import android.widget.TextView;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.BatteryCircleMeterView;
 import com.android.internal.app.MediaRouteDialogPresenter;
+import com.android.internal.util.paranoid.LightbulbConstants;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsModel.ActivityState;
 import com.android.systemui.statusbar.phone.QuickSettingsModel.BluetoothState;
@@ -92,6 +96,8 @@ class QuickSettings {
     static final boolean DEBUG_GONE_TILES = false;
     private static final String TAG = "QuickSettings";
     public static final boolean SHOW_IME_TILE = false;
+    private static final String AUTO_START = "AUTO_START";
+    private static final String TOGGLE_FLASHLIGHT = "TOGGLE_FLASHLIGHT";
 
     public enum Tile {
         USER,
@@ -106,7 +112,11 @@ class QuickSettings {
         LOCATION,
         IMMERSIVE,
         NFC,
-        ADB
+        ADB,
+        LTE,
+        MOBILENETWORK,
+        LIGHTBULB,
+        SLEEP
     }
 
     public static final String NO_TILES = "NO_TILES";
@@ -114,7 +124,8 @@ class QuickSettings {
     public static final String DEFAULT_TILES = Tile.USER + DELIMITER + Tile.BRIGHTNESS
         + DELIMITER + Tile.SETTINGS + DELIMITER + Tile.WIFI + DELIMITER + Tile.RSSI
         + DELIMITER + Tile.ROTATION + DELIMITER + Tile.BATTERY + DELIMITER + Tile.BLUETOOTH
-        + DELIMITER + Tile.LOCATION + DELIMITER + Tile.IMMERSIVE;
+        + DELIMITER + Tile.LOCATION + DELIMITER + Tile.IMMERSIVE + DELIMITER + Tile.MOBILENETWORK
+        + DELIMITER + Tile.LIGHTBULB;
 
     private Context mContext;
     private PanelBar mBar;
@@ -157,7 +168,7 @@ class QuickSettings {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         mConnectivityManager =
-                    (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+                   (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         mHandler = new Handler();
 
@@ -839,6 +850,107 @@ class QuickSettings {
                     mModel.addNfcTile(nfcTile, new QuickSettingsModel.BasicRefreshCallback(nfcTile));
                     parent.addView(nfcTile);
                     if(addMissing) nfcTile.setVisibility(View.GONE);
+                } else if (Tile.MOBILENETWORK.toString().equals(tile.toString())) { // MobileNetwork
+                    if (mModel.deviceHasMobileData()) {
+                        final QuickSettingsBasicTile mobileNetworkTile
+                                = new QuickSettingsBasicTile(mContext);
+                        mobileNetworkTile.setTileId(Tile.MOBILENETWORK);
+                        mobileNetworkTile.setImageResource(R.drawable.ic_qs_unexpected_network);
+                        mobileNetworkTile.setTextResource(R.string.quick_settings_network_unknown);
+                        mobileNetworkTile.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mModel.toggleMobileNetworkState();
+                            }
+                        });
+
+                        mobileNetworkTile.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                Intent intent = new Intent(Intent.ACTION_MAIN);
+                                intent.setClassName("com.android.phone", "com.android.phone.Settings");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startSettingsActivity(intent);
+                                return true;
+                            }
+                        });
+
+                        mModel.addMobileNetworkTile(mobileNetworkTile, new QuickSettingsModel.RefreshCallback() {
+                            @Override
+                            public void refreshView(QuickSettingsTileView unused, State mobileNetworkState) {
+                                mobileNetworkTile.setImageResource(mobileNetworkState.iconId);
+                                mobileNetworkTile.setText(mobileNetworkState.label);
+                            }
+                        });
+
+                        parent.addView(mobileNetworkTile);
+                        if(addMissing) mobileNetworkTile.setVisibility(View.GONE);
+                        mModel.refreshMobileNetworkTile();
+                    }
+                } else if(Tile.LIGHTBULB.toString().equals(tile.toString())) { // Lightbulb
+                    final QuickSettingsBasicTile lightbulbTile
+                            = new QuickSettingsBasicTile(mContext);
+                    lightbulbTile.setTileId(Tile.LIGHTBULB);
+                    lightbulbTile.setImageResource(R.drawable.ic_qs_lightbulb_on);
+                    lightbulbTile.setTextResource(R.string.quick_settings_lightbulb_label);
+                    lightbulbTile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!mModel.mLightbulbActive && !mModel.deviceHasCameraFlash()) {
+                                collapsePanels();
+                                startSettingsActivity(LightbulbConstants.INTENT_LAUNCH_APP);
+                            } else if (mModel.mLightbulbActive) {
+                                collapsePanels();
+                            }
+                            Intent intent = new Intent(TOGGLE_FLASHLIGHT);
+                            intent.putExtra(AUTO_START, true);
+                            mContext.sendBroadcast(intent);
+                        }
+                    });
+
+                    lightbulbTile.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            startSettingsActivity(LightbulbConstants.INTENT_LAUNCH_APP);
+                            return true;
+                        }
+                    });
+
+                    mModel.addLightbulbTile(lightbulbTile, new QuickSettingsModel.RefreshCallback() {
+                        @Override
+                        public void refreshView(QuickSettingsTileView unused, State state) {
+                            lightbulbTile.setImageResource(state.iconId);
+                            lightbulbTile.setText(state.label);
+                        }
+                    });
+
+                    parent.addView(lightbulbTile);
+                    if(addMissing) lightbulbTile.setVisibility(View.GONE);
+                } else if(Tile.SLEEP.toString().equals(tile.toString())) { // Sleep
+                    final PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+
+                    final QuickSettingsBasicTile sleepTile
+                    = new QuickSettingsBasicTile(mContext);
+                    sleepTile.setTileId(Tile.SLEEP);
+                    sleepTile.setImageResource(R.drawable.ic_qs_sleep);
+                    sleepTile.setTextResource(R.string.quick_settings_sleep_label);
+                    sleepTile.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pm.goToSleep(SystemClock.uptimeMillis());
+                        }
+                    });
+
+                    sleepTile.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            collapsePanels();
+                            startSettingsActivity(android.provider.Settings.ACTION_DISPLAY_SETTINGS);
+                            return true;
+                        }
+                    });
+                    parent.addView(sleepTile);
+                    if(addMissing) sleepTile.setVisibility(View.GONE);
                 }
             }
         }
@@ -867,6 +979,35 @@ class QuickSettings {
             }
         });
         parent.addView(alarmTile);
+
+        // Usb Mode
+        final QuickSettingsBasicTile usbModeTile
+                = new QuickSettingsBasicTile(mContext);
+        usbModeTile.setTemporary(true);
+        usbModeTile.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mConnectivityManager.getTetherableWifiRegexs().length != 0) {
+                    Intent intent = new Intent();
+                    intent.setComponent(new ComponentName(
+                            "com.android.settings",
+                            "com.android.settings.Settings$TetherSettingsActivity"));
+                    startSettingsActivity(intent);
+                }
+                return true;
+            }
+        });
+
+        mModel.addUsbModeTile(usbModeTile, new QuickSettingsModel.RefreshCallback() {
+            @Override
+            public void refreshView(QuickSettingsTileView unused, State usbState) {
+                usbModeTile.setImageResource(usbState.iconId);
+                usbModeTile.setText(usbState.label);
+                usbModeTile.setVisibility(usbState.enabled ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        parent.addView(usbModeTile);
 
         // Remote Display
         QuickSettingsBasicTile remoteDisplayTile

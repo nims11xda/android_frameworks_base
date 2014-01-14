@@ -35,7 +35,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -93,24 +92,6 @@ public class ResolverActivity extends AlertActivity implements AdapterView.OnIte
         }
     };
 
-    private class Observer extends ContentObserver {
-        public Observer(Handler mHandler) {
-            super(mHandler);
-        }
-
-        public void startObserving() {
-            final ContentResolver cr = getContentResolver();
-            cr.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.REVERSE_DEFAULT_APP_PICKER), false, this,
-                    UserHandle.USER_ALL);
-        }
-
-        public void onChange(boolean selfChange) {
-            mReverseBehaviour = Settings.System.getInt(getContentResolver(),
-                    Settings.System.REVERSE_DEFAULT_APP_PICKER, 0);
-        }
-    }
-
     private Intent makeMyIntent() {
         Intent intent = new Intent(getIntent());
         intent.setComponent(null);
@@ -151,9 +132,8 @@ public class ResolverActivity extends AlertActivity implements AdapterView.OnIte
             boolean alwaysUseOption) {
         setTheme(R.style.Theme_DeviceDefault_Light_Dialog_Alert);
         super.onCreate(savedInstanceState);
-        Observer observer = new Observer(new Handler());
-        observer.startObserving();
-        observer.onChange(false);
+        mReverseBehaviour = Settings.System.getInt(getContentResolver(),
+                Settings.System.REVERSE_DEFAULT_APP_PICKER, 0);
         try {
             mLaunchedFromUid = ActivityManagerNative.getDefault().getLaunchedFromUid(
                     getActivityToken());
@@ -325,9 +305,10 @@ public class ResolverActivity extends AlertActivity implements AdapterView.OnIte
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (isReversed()) {
-            Settings.System.putInt(getContentResolver(),
-                    Settings.System.REVERSE_DEFAULT_APP_PICKER, mAlwaysButton.isPressed() ? 2 : 1);
-            startSelected(position, mAlwaysButton.isPressed());
+            if (mAlwaysButton != null)
+                Settings.System.putInt(getContentResolver(),
+                        Settings.System.REVERSE_DEFAULT_APP_PICKER, mAlwaysButton.isPressed() ? 2 : 1);
+            startSelected(position, mAlwaysButton != null && mAlwaysButton.isPressed());
         } else {
             final int checkedPos = mListView.getCheckedItemPosition();
             final boolean hasValidSelection = checkedPos != ListView.INVALID_POSITION;

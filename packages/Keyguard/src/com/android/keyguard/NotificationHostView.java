@@ -38,6 +38,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.service.notification.StatusBarNotification;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -331,6 +332,7 @@ public class NotificationHostView extends FrameLayout {
 
     public boolean addNotification(StatusBarNotification sbn, boolean showNotification, boolean forceBigContentView) {
         if ((!NotificationViewManager.config.hideLowPriority || sbn.getNotification().priority > Notification.PRIORITY_LOW)
+                && NotificationViewManager.NotificationListener.isValidNotification(sbn)
                 && (!NotificationViewManager.config.hideNonClearable || sbn.isClearable())) {
             mNotificationsToAdd.add(new NotificationView(mContext, sbn));
             Message msg = new Message();
@@ -370,7 +372,9 @@ public class NotificationHostView extends FrameLayout {
         RemoteViews rv = forceBigContentView && bigContentView ? sbn.getNotification().bigContentView : sbn.getNotification().contentView;
         final View remoteView = rv.apply(mContext, null);
         remoteView.setBackgroundColor(0x33ffffff);
-        remoteView.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+        boolean dynamicWidth = getResources().getDisplayMetrics().density >= DisplayMetrics.DENSITY_XXHIGH;
+        remoteView.setLayoutParams(new LayoutParams(dynamicWidth ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT));
         remoteView.setX(mDisplayWidth - mNotificationMinHeight);
         if (bigContentView && forceBigContentView) {
             setBackgroundRecursive((ViewGroup)remoteView);
