@@ -164,11 +164,9 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         if (mDialog != null) {
             mDialog.dismiss();
             mDialog = null;
-            mDialog = createDialog();
             // Show delayed, so that the dismiss of the previous dialog completes
             mHandler.sendEmptyMessage(MESSAGE_SHOW);
         } else {
-            mDialog = createDialog();
             handleShow();
         }
     }
@@ -187,6 +185,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
 
     private void handleShow() {
         awakenIfNecessary();
+        mDialog = createDialog();
         prepareDialog();
 
         final IStatusBarService barService = IStatusBarService.Stub.asInterface(
@@ -564,7 +563,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             new SinglePressAction(drawable, name) {
 
                 public void onPress() {
-                    mWindowManagerFuncs.reboot(action, true);
+                    mWindowManagerFuncs.reboot(action, false);
                 }
 
                 public boolean showDuringKeyguard() {
@@ -1033,7 +1032,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onServiceStateChanged(ServiceState serviceState) {
-            if (!mHasTelephony) return;
+            if (!mHasTelephony || mAirplaneModeOn == null || mAdapter == null) return;
             final boolean inAirplaneMode = serviceState.getState() == ServiceState.STATE_POWER_OFF;
             mAirplaneState = inAirplaneMode ? ToggleAction.State.On : ToggleAction.State.Off;
             mHandler.sendEmptyMessage(MESSAGE_REFRESH_AIRPLANEMODE);

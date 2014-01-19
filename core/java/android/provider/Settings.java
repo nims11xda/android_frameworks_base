@@ -2741,6 +2741,12 @@ public final class Settings {
          * @hide
          */
         public static final String EGG_MODE = "egg_mode";
+ 
+        /**
+         * Whether national data roaming should be used.
+         * @hide
+         */
+        public static final String MVNO_ROAMING = "mvno_roaming";
 
         /**
          * Whether or not to launch default music player when headset is connected
@@ -3277,6 +3283,13 @@ public final class Settings {
          * @hide
          */
         public static final String NON_INTRUSIVE_INCALL = "non_intrusive_incall";
+
+        /**
+         * Holds the text for the Carrier label. An empty string
+         * will bring the default text back.
+         * @hide
+         */
+        public static final String NOTIFICATION_CUSTOM_CARRIER_LABEL = "notification_custom_carrier_label";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

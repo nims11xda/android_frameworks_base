@@ -129,8 +129,7 @@ public class RecentsActivity extends Activity {
         // Check if we need to enable alternate drawable for recent apps key
         if(mNavigationCallback == null) return; // Multiuser is not allowed
         int navigationHints = mNavigationCallback.getNavigationIconHints();
-        mNavigationCallback.setNavigationIconHints(NavigationBarView.NAVBAR_RECENTS_HINT,
-                show ? (navigationHints | StatusBarManager.NAVIGATION_HINT_RECENT_ALT)
+        mNavigationCallback.setNavigationIconHints( show ? (navigationHints | StatusBarManager.NAVIGATION_HINT_RECENT_ALT)
                 : (navigationHints & ~StatusBarManager.NAVIGATION_HINT_RECENT_ALT), true);
     }
 
