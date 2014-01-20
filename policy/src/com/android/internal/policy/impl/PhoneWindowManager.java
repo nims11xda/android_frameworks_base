@@ -304,18 +304,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean mTranslucentDecorEnabled = true;
 
     int mPointerLocationMode = 0; // guarded by mLock
-<<<<<<< HEAD
-=======
-    int mDeviceHardwareKeys;
-    int mBackKillTimeout;
-    boolean mBackKillPending;
-    boolean mHasBackKey;
-    boolean mHasHomeKey;
-    boolean mHasMenuKey;
-    boolean mHasAssistKey;
-    boolean mHasAppSwitchKey;
-    boolean mSoftBackKillApp;
->>>>>>> 2a7f6e1... [1/2] base: task utils and navigation bar
 
     // The last window we were told about in focusChanged.
     WindowState mFocusedWindow;
@@ -1036,48 +1024,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
     }
 
-<<<<<<< HEAD
     /**
      * Read values from config.xml that may be overridden depending on
      * the configuration of the device.
      * eg. Disable long press on home goes to recents on sw600dp.
      */
     private void readConfigurationDependentBehaviors() {
-=======
-    private void updateKeyAssignments() {
-        final boolean hasMenu = (mDeviceHardwareKeys & KEY_MASK_MENU) != 0;
-        final boolean hasBack = (mDeviceHardwareKeys & KEY_MASK_BACK) != 0;
-        final boolean hasHome = (mDeviceHardwareKeys & KEY_MASK_HOME) != 0;
-        final boolean hasAssist = (mDeviceHardwareKeys & KEY_MASK_ASSIST) != 0;
-        final boolean hasAppSwitch = (mDeviceHardwareKeys & KEY_MASK_APP_SWITCH) != 0;
-        final ContentResolver resolver = mContext.getContentResolver();
-
-        mSoftBackKillApp = Settings.System.getIntForUser(resolver,
-                Settings.System.SOFT_BACK_KILL_APP_ENABLE,
-                0, UserHandle.USER_CURRENT) == 1;
-
-        // initialize all assignments to sane defaults
-        mPressOnHomeBehavior = KEY_ACTION_HOME;
-        mPressOnMenuBehavior = KEY_ACTION_MENU;
-        if (!hasMenu || hasAssist) {
-            mLongPressOnMenuBehavior = KEY_ACTION_NOTHING;
-        } else {
-            mLongPressOnMenuBehavior = KEY_ACTION_SEARCH;
-        }
-        mPressOnAssistBehavior = KEY_ACTION_SEARCH;
-        mLongPressOnAssistBehavior = KEY_ACTION_VOICE_SEARCH;
-        mPressOnAppSwitchBehavior = KEY_ACTION_APP_SWITCH;
-        mLongPressOnAppSwitchBehavior = KEY_ACTION_NOTHING;
-        mPressOnBackBehavior = KEY_ACTION_BACK;
-
-        // sof key back kill app will overrule this default
-        if (mSoftBackKillApp){
-            mLongPressOnBackBehavior = KEY_ACTION_KILL_APP;
-        } else {
-            mLongPressOnBackBehavior = KEY_ACTION_NOTHING;
-        }
-
->>>>>>> 2a7f6e1... [1/2] base: task utils and navigation bar
         mLongPressOnHomeBehavior = mContext.getResources().getInteger(
                 com.android.internal.R.integer.config_longPressOnHomeBehavior);
         if (mLongPressOnHomeBehavior < LONG_PRESS_HOME_NOTHING ||
