@@ -96,8 +96,8 @@ public class KeyguardHostView extends KeyguardViewBase {
     private KeyguardSecurityViewFlipper mSecurityViewContainer;
     private KeyguardSelectorView mKeyguardSelectorView;
     private KeyguardTransportControlView mTransportControl;
-    private boolean mIsVerifyUnlockOnly;
     private View mExpandChallengeView;
+    private boolean mIsVerifyUnlockOnly;
     private boolean mEnableFallback; // TODO: This should get the value from KeyguardPatternView
     private SecurityMode mCurrentSecuritySelection = SecurityMode.Invalid;
     private int mAppWidgetToShow;
@@ -440,7 +440,6 @@ public class KeyguardHostView extends KeyguardViewBase {
             mExpandChallengeView.setOnLongClickListener(mFastUnlockClickListener);
             mExpandChallengeView.bringToFront();
         }
-
     }
 
     private final OnLongClickListener mFastUnlockClickListener = new OnLongClickListener() {
@@ -461,12 +460,6 @@ public class KeyguardHostView extends KeyguardViewBase {
         addWidgetsFromSettings();
         maybeEnableAddButton();
         checkAppWidgetConsistency();
-
-        // Don't let the user drag the challenge down if widgets are disabled.
-        if (mSlidingChallengeLayout != null) {
-            mSlidingChallengeLayout.setEnableChallengeDragging(
-                    !widgetsDisabled() || mDefaultAppWidgetAttached);
-        }
 
         // Select the appropriate page
         mSwitchPageRunnable.run();
@@ -1084,6 +1077,11 @@ public class KeyguardHostView extends KeyguardViewBase {
 
         if (mSlidingChallengeLayout != null) {
             mSlidingChallengeLayout.setChallengeInteractive(!fullScreenEnabled);
+            // Don't let the user drag the challenge down if widgets are disabled
+            // or it is a simpin, simpuk or accountswitcher lockscreen
+            mSlidingChallengeLayout.setEnableChallengeDragging(
+                    !isSimOrAccount(securityMode, false)
+                    && (!widgetsDisabled() || mDefaultAppWidgetAttached));
         }
 
         // Emulate Activity life cycle
@@ -1137,6 +1135,7 @@ public class KeyguardHostView extends KeyguardViewBase {
         }
 
         requestFocus();
+        minimizeChallengeIfDesired();
     }
 
     @Override

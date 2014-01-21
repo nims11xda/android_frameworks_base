@@ -839,7 +839,6 @@ android_media_MediaPlayer_updateProxyConfig(
 
         if (host != NULL && exclusionListObj != NULL) {
             const char *exclusionList = env->GetStringUTFChars(exclusionListObj, NULL);
-
             if (exclusionList != NULL) {
                 thisplayer->updateProxyConfig(host, port, exclusionList);
 
