@@ -3288,6 +3288,13 @@ public final class Settings {
         public static final String NON_INTRUSIVE_INCALL = "non_intrusive_incall";
 
         /**
+         * Should Flip to Silence be used
+         *
+         * @hide
+         */
+        public static final String FLIP_ACTION_KEY = "flip_action";
+
+        /**
          * Setting to show determine if AOSP dialer is used
          * @hide
          */
