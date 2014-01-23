@@ -3292,7 +3292,7 @@ public final class Settings {
          *
          * @hide
          */
-        public static final String FLIP_ACTION_KEY = "flip_action";
+        public static final String FLIP_ACTION = "flip_action";
 
         /**
          * Setting to show determine if AOSP dialer is used
