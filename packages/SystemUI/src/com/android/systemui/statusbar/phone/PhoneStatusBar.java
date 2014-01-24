@@ -362,7 +362,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
                     false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BATTERY_STYLE), false, this);
-
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_SHOW), false, this);
         }
 
         @Override
@@ -373,6 +374,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
                     Settings.System.LOCKSCREEN_USE_WIDGET_CONTAINER_CAROUSEL))) {
                 if (mNavigationBarView != null) {
                     mNavigationBarView.disableCameraByUser();
+                }
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_SHOW))) {
+                boolean show = Settings.System.getInt(mContext.getContentResolver(),
+                        Settings.System.NAVIGATION_BAR_SHOW, 1) == 1;
+                if (show) {
+                    makeNavigationBarView();
+                    addNavigationBar();
+                } else {
+                    removeNavigationBar();
+                    mNavigationBarView = null;
                 }
             }
             updateBatteryIcons();
@@ -502,29 +514,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         }
 
         updateShowSearchHoldoff();
-
-        try {
-            boolean showNav = mWindowManagerService.hasNavigationBar();
-            if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
-            if (showNav) {
-                mNavigationBarView =
-                    (NavigationBarView) View.inflate(context, R.layout.navigation_bar, null);
-
-                mNavigationBarView.setDisabledFlags(mDisabled);
-                mNavigationBarView.setBar(this);
-                mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        checkUserAutohide(v, event);
-                        return false;
-                    }});
-            }
-        } catch (RemoteException ex) {
-            // no window manager? good luck with that
-        }
-
-        // set recents activity navigation bar view
-        RecentsActivity.setNavigationBarView(mNavigationBarView);
+        
+        makeNavigationBarView();
 
         // figure out which pixel-format to use for the status bar.
         mPixelFormat = PixelFormat.OPAQUE;
@@ -787,6 +778,31 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         return mStatusBarView;
     }
 
+    private void makeNavigationBarView() {
+        try {
+            boolean showNav = mWindowManagerService.hasNavigationBar();
+            if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
+            if (showNav) {
+                mNavigationBarView =
+                    (NavigationBarView) View.inflate(mContext, R.layout.navigation_bar, null);
+
+                mNavigationBarView.setDisabledFlags(mDisabled);
+                mNavigationBarView.setBar(this);
+                mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        checkUserAutohide(v, event);
+                        return false;
+                    }});
+            }
+        } catch (RemoteException ex) {
+            // no window manager? good luck with that
+        }
+
+        // set recents activity navigation bar view
+        RecentsActivity.setNavigationBarView(mNavigationBarView);
+    }
+
     @Override
     protected void onShowSearchPanel() {
         if (mNavigationBarView != null) {
@@ -932,6 +948,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         mNavigationBarView.setListeners(mRecentsClickListener,
                 mRecentsPreloadOnTouchListener, mHomeSearchActionListener);
         updateSearchPanel();
+    }
+
+    private void removeNavigationBar() {
+        if (mNavigationBarView != null) {
+            mWindowManager.removeView(mNavigationBarView);
+        }
     }
 
     // For small-screen devices (read: phones) that lack hardware navigation buttons
