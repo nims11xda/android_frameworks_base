@@ -1316,7 +1316,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Allow the navigation bar to move on small devices (phones).
         mNavigationBarCanMove = shortSizeDp < 600;
 
-        mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+        final int showByDefault = mContext.getResources().getBoolean(
+                    com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0;
+        mHasNavigationBar = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_SHOW, showByDefault,
+                    UserHandle.USER_CURRENT) == 1;
+
         // Allow a system property to override this. Used by the emulator.
         // See also hasNavigationBar().
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
@@ -1410,6 +1415,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
             mVolumeWakeScreen = Settings.System.getIntForUser(resolver,
                     Settings.System.VOLUME_WAKE_SCREEN, 0, UserHandle.USER_CURRENT) != 0;
+
+            final int showByDefault = mContext.getResources().getBoolean(
+                    com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0;
+            mHasNavigationBar = Settings.System.getIntForUser(resolver,
+                    Settings.System.NAVIGATION_BAR_SHOW, showByDefault,
+                    UserHandle.USER_CURRENT) == 1;
 
             if (mSystemReady) {
                 int pointerLocation = Settings.System.getIntForUser(resolver,
@@ -5626,6 +5637,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mClearedBecauseOfForceShow = false;
         }
 
+        // The window who requested navbar force showing disappeared and next window wants
+        // to hide navbar. Instead of hiding we will make it transient. SystemUI will take care
+        // about hiding after timeout. This should not happen if next window is keyguard because
+        // transient state have more priority than translucent (why?) and cause bad UX
+        if (wasCleared && !mClearedBecauseOfForceShow
+                && (tmpVisibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
+            mNavigationBarController.showTransient();
+            tmpVisibility |= View.NAVIGATION_BAR_TRANSIENT;
+            mWindowManagerFuncs.addSystemUIVisibilityFlag(View.NAVIGATION_BAR_TRANSIENT);
+        }
+
         int visibility = updateSystemBarsLw(win, mLastSystemUiFlags, tmpVisibility);
         final int diff = visibility ^ mLastSystemUiFlags;
         final boolean needsMenu = win.getNeedsMenuLw(mTopFullscreenOpaqueWindowState);
@@ -5634,12 +5656,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             return 0;
         }
 
-        if (wasCleared && !mClearedBecauseOfForceShow
-                && (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0) {
-            mNavigationBarController.showTransient();
-            visibility |= View.NAVIGATION_BAR_TRANSIENT;
-            mWindowManagerFuncs.addSystemUIVisibilityFlag(View.NAVIGATION_BAR_TRANSIENT);
-        }
         final int visibility2 = visibility;
         mLastSystemUiFlags = visibility;
         mLastFocusNeedsMenu = needsMenu;
