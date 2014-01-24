@@ -2939,6 +2939,12 @@ public final class Settings {
         public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
 
         /**
+         * Enable/disable statusbar network indicators
+         * @hide
+         */
+        public static final String STATUS_BAR_NETWORK_INDICATORS = "status_bar_network_indicators";
+
+        /**
          * Whether to show the network status in the status bar
          * @hide
          */

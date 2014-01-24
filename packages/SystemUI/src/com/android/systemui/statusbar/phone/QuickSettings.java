@@ -117,7 +117,6 @@ class QuickSettings {
         IMMERSIVE,
         NFC,
         LTE,
-        MOBILENETWORK,
         LIGHTBULB,
         SLEEP
     }
@@ -915,23 +914,40 @@ class QuickSettings {
                     parent.addView(locationTile);
                     if(addMissing) locationTile.setVisibility(View.GONE);
                 } else if(Tile.IMMERSIVE.toString().equals(tile.toString())) { // Immersive mode tile
-                    final QuickSettingsBasicTile immersiveTile
-                            = new QuickSettingsBasicTile(mContext);
+                    final QuickSettingsDualBasicTile immersiveTile
+                            = new QuickSettingsDualBasicTile(mContext);
+                    immersiveTile.setDefaultContent();
                     immersiveTile.setTileId(Tile.IMMERSIVE);
-                    immersiveTile.setImageResource(R.drawable.ic_qs_immersive_off);
-                    immersiveTile.setTextResource(R.string.quick_settings_immersive_mode_off_label);
-                    immersiveTile.setOnClickListener(new View.OnClickListener() {
+                    immersiveTile.setFrontImageResource(R.drawable.ic_qs_immersive_off);
+                    immersiveTile.setFrontTextResource(R.string.quick_settings_immersive_mode_off_label);
+                    immersiveTile.setFrontOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mModel.switchImmersiveModeStyles();
+                            mModel.changeImmersiveMode();
                             mModel.refreshImmersiveTile();
                         }
                     });
                     mModel.addImmersiveTile(immersiveTile, new QuickSettingsModel.RefreshCallback() {
                         @Override
                         public void refreshView(QuickSettingsTileView unused, State state) {
-                            immersiveTile.setImageResource(state.iconId);
-                            immersiveTile.setText(state.label);
+                            immersiveTile.setFrontImageResource(state.iconId);
+                            immersiveTile.setFrontText(state.label);
+                        }
+                    });
+                    immersiveTile.setBackImageResource(R.drawable.ic_qs_immersive_off);
+                    immersiveTile.setBackTextResource(R.string.quick_settings_immersive_mode_off_label);
+                    immersiveTile.setBackOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mModel.switchImmersiveModeStyles();
+                            mModel.refreshImmersiveExtraTile();
+                        }
+                    });
+                    mModel.addImmersiveExtraTile(immersiveTile.getBack(), new QuickSettingsModel.RefreshCallback() {
+                        @Override
+                        public void refreshView(QuickSettingsTileView unused, State state) {
+                            immersiveTile.setBackImageResource(state.iconId);
+                            immersiveTile.setBackText(state.label);
                         }
                     });
                     parent.addView(immersiveTile);
@@ -974,43 +990,6 @@ class QuickSettings {
                     mModel.addNfcTile(nfcTile, new QuickSettingsModel.BasicRefreshCallback(nfcTile));
                     parent.addView(nfcTile);
                     if(addMissing) nfcTile.setVisibility(View.GONE);
-                } else if (Tile.MOBILENETWORK.toString().equals(tile.toString())) { // MobileNetwork
-                    if (mModel.deviceHasMobileData()) {
-                        final QuickSettingsBasicTile mobileNetworkTile
-                                = new QuickSettingsBasicTile(mContext);
-                        mobileNetworkTile.setTileId(Tile.MOBILENETWORK);
-                        mobileNetworkTile.setImageResource(R.drawable.ic_qs_unexpected_network);
-                        mobileNetworkTile.setTextResource(R.string.quick_settings_network_unknown);
-                        mobileNetworkTile.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                mModel.toggleMobileNetworkState();
-                            }
-                        });
-
-                        mobileNetworkTile.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                Intent intent = new Intent(Intent.ACTION_MAIN);
-                                intent.setClassName("com.android.phone", "com.android.phone.Settings");
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startSettingsActivity(intent);
-                                return true;
-                            }
-                        });
-
-                        mModel.addMobileNetworkTile(mobileNetworkTile, new QuickSettingsModel.RefreshCallback() {
-                            @Override
-                            public void refreshView(QuickSettingsTileView unused, State mobileNetworkState) {
-                                mobileNetworkTile.setImageResource(mobileNetworkState.iconId);
-                                mobileNetworkTile.setText(mobileNetworkState.label);
-                            }
-                        });
-
-                        parent.addView(mobileNetworkTile);
-                        if(addMissing) mobileNetworkTile.setVisibility(View.GONE);
-                        mModel.refreshMobileNetworkTile();
-                    }
                 } else if(Tile.LIGHTBULB.toString().equals(tile.toString())) { // Lightbulb tile
                     final QuickSettingsBasicTile lightbulbTile
                             = new QuickSettingsBasicTile(mContext);

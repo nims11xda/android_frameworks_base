@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
@@ -163,8 +164,23 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     String mLastCombinedLabel = "";
 
     private boolean mHasMobileDataFeature;
+    private boolean mNetworkIndicatorsEnabled;
 
     boolean mDataAndWifiStacked = false;
+
+    private class NetworkIndicatorContentObserver extends ContentObserver {
+        public NetworkIndicatorContentObserver(Handler handler) {
+            super(handler);
+        }
+        @Override
+        public void onChange(boolean selfChange) {
+            mNetworkIndicatorsEnabled = Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUS_BAR_NETWORK_INDICATORS, 1) == 1;
+        }
+        private void startObserving() {
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.STATUS_BAR_NETWORK_INDICATORS),
+                    false, this);
+        }
+    }
 
     public interface SignalCluster {
         void setWifiIndicators(boolean visible, int strengthIcon, int activityIcon,
@@ -254,6 +270,10 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
         updateAirplaneMode();
 
         mLastLocale = mContext.getResources().getConfiguration().locale;
+
+        NetworkIndicatorContentObserver observer = new NetworkIndicatorContentObserver(new Handler());
+        observer.startObserving();
+        observer.onChange(true);
     }
 
     public boolean hasMobileDataFeature() {
@@ -1094,20 +1114,22 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
             // Now for things that should only be shown when actually using mobile data.
             if (mDataConnected) {
                 combinedSignalIconId = mDataSignalIconId;
-                switch (mDataActivity) {
-                    case TelephonyManager.DATA_ACTIVITY_IN:
-                        mMobileActivityIconId = R.drawable.stat_sys_signal_in;
-                        break;
-                    case TelephonyManager.DATA_ACTIVITY_OUT:
-                        mMobileActivityIconId = R.drawable.stat_sys_signal_out;
-                        break;
-                    case TelephonyManager.DATA_ACTIVITY_INOUT:
-                        mMobileActivityIconId = R.drawable.stat_sys_signal_inout;
-                        break;
-                    default:
-                        mMobileActivityIconId = 0;
-                        break;
-                }
+                if (mNetworkIndicatorsEnabled) {
+                    switch (mDataActivity) {
+                        case TelephonyManager.DATA_ACTIVITY_IN:
+                            mMobileActivityIconId = R.drawable.stat_sys_signal_in;
+                            break;
+                        case TelephonyManager.DATA_ACTIVITY_OUT:
+                            mMobileActivityIconId = R.drawable.stat_sys_signal_out;
+                            break;
+                        case TelephonyManager.DATA_ACTIVITY_INOUT:
+                            mMobileActivityIconId = R.drawable.stat_sys_signal_inout;
+                            break;
+                        default:
+                            mMobileActivityIconId = 0;
+                            break;
+                    }
+                } else mMobileActivityIconId = 0;
 
                 combinedLabel = mobileLabel;
                 combinedActivityIconId = mMobileActivityIconId;
@@ -1127,20 +1149,22 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                 if (DEBUG) {
                     wifiLabel += "xxxxXXXXxxxxXXXX";
                 }
-                switch (mWifiActivity) {
-                    case WifiManager.DATA_ACTIVITY_IN:
-                        mWifiActivityIconId = R.drawable.stat_sys_wifi_in;
-                        break;
-                    case WifiManager.DATA_ACTIVITY_OUT:
-                        mWifiActivityIconId = R.drawable.stat_sys_wifi_out;
-                        break;
-                    case WifiManager.DATA_ACTIVITY_INOUT:
-                        mWifiActivityIconId = R.drawable.stat_sys_wifi_inout;
-                        break;
-                    case WifiManager.DATA_ACTIVITY_NONE:
-                        mWifiActivityIconId = 0;
-                        break;
-                }
+                if (mNetworkIndicatorsEnabled) {
+                    switch (mWifiActivity) {
+                        case WifiManager.DATA_ACTIVITY_IN:
+                            mWifiActivityIconId = R.drawable.stat_sys_wifi_in;
+                            break;
+                        case WifiManager.DATA_ACTIVITY_OUT:
+                            mWifiActivityIconId = R.drawable.stat_sys_wifi_out;
+                            break;
+                        case WifiManager.DATA_ACTIVITY_INOUT:
+                            mWifiActivityIconId = R.drawable.stat_sys_wifi_inout;
+                            break;
+                        case WifiManager.DATA_ACTIVITY_NONE:
+                            mWifiActivityIconId = 0;
+                            break;
+                    }
+                } else mWifiActivityIconId = 0;
             }
 
             combinedActivityIconId = mWifiActivityIconId;
