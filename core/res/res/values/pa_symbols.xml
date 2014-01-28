@@ -24,7 +24,6 @@
   <java-symbol type="drawable" name="ic_lock_reboot_recovery" />
   <java-symbol type="drawable" name="ic_lock_reboot_bootloader" />
   <java-symbol type="drawable" name="ic_lock_screenshot" />
-  <java-symbol type="drawable" name="pa_world_logo" />
   <java-symbol type="string" name="global_actions" />
   <java-symbol type="string" name="global_action_reboot" />
   <java-symbol type="string" name="global_action_screenshot" />
@@ -95,4 +94,6 @@
   <java-symbol type="anim" name="slide_in_left_no_fade" />
   <java-symbol type="anim" name="slide_out_right_no_fade" />
 
+  <!--Camera flash-->
+  <java-symbol type="bool" name="config_device_has_camera_flash" />
 </resources>
