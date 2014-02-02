@@ -116,7 +116,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="4dp"
-        >
+        android:layout_alignRight="@+id/header">
+
         <ImageView android:id="@+id/settings_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
