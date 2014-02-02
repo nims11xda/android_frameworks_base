@@ -360,7 +360,7 @@ public class NotificationHostView extends FrameLayout {
             View v = g.getChildAt(i);
             if (v instanceof ViewGroup) {
                 setBackgroundRecursive((ViewGroup)v);
-                ((ViewGroup)v).setBackgroundColor(0x33555555);
+                v.setBackground(null);
             }
         }
     }
@@ -395,13 +395,11 @@ public class NotificationHostView extends FrameLayout {
         nv.bigContentView = bigContentView && forceBigContentView;
         RemoteViews rv = nv.bigContentView ? sbn.getNotification().bigContentView : sbn.getNotification().contentView;
         final View remoteView = rv.apply(mContext, null);
-        remoteView.setBackgroundColor(0x33ffffff);
         remoteView.setLayoutParams(new LayoutParams(mDynamicWidth ? LayoutParams.WRAP_CONTENT : LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT));
         remoteView.setX(mDisplayWidth - mNotificationMinHeight);
-        if (bigContentView && forceBigContentView) {
-            setBackgroundRecursive((ViewGroup)remoteView);
-        }
+        setBackgroundRecursive((ViewGroup)remoteView);
+        remoteView.setBackgroundColor(NotificationViewManager.config.notificationColor);
         remoteView.setAlpha(1f);
         if (bigContentView && sbn.getNotification().contentView != null) {
             final boolean bc = !forceBigContentView;
@@ -580,15 +578,17 @@ public class NotificationHostView extends FrameLayout {
     private void setButtonDrawable() {
         IStatusBarService statusBar = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
-        try {
-            if (mNotifications.size() == 0) {
-                statusBar.setButtonDrawable(0, 0);
-            } else if (mShownNotifications == mNotifications.size()) {
-                statusBar.setButtonDrawable(0, 2);
-            } else {
-                statusBar.setButtonDrawable(0, 1);
-            }
-        } catch (RemoteException ex) {}
+        if (statusBar != null) {
+            try {
+                if (mNotifications.size() == 0) {
+                    statusBar.setButtonDrawable(0, 0);
+                } else if (mShownNotifications == mNotifications.size()) {
+                    statusBar.setButtonDrawable(0, 2);
+                } else {
+                    statusBar.setButtonDrawable(0, 1);
+                }
+            } catch (RemoteException ex) {}
+        }
     }
 
     private void animateBackgroundColor(final int targetColor) {
