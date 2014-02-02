@@ -3337,6 +3337,13 @@ public final class Settings {
         public static final String NON_INTRUSIVE_INCALL = "non_intrusive_incall";
 
         /**
+         * Should Flip to Silence be used
+         *
+         * @hide
+         */
+        public static final String FLIP_ACTION = "flip_action";
+
+        /**
          * Quick settings quick pull down option
          * @hide
          */
