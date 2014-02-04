@@ -2945,12 +2945,6 @@ public final class Settings {
         };
 
         /**
-         * Wether navigation bar is enabled or not
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
-
-        /**
          * Sets navigation bar height in percent
          * @hide
          */
