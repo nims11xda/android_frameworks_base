@@ -83,10 +83,6 @@
     <!-- Needed for navring target "kill app" -->
     <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
 
-    <!--Halo-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-
-
     <application
         android:persistent="true"
         android:allowClearUserData="false"
@@ -265,6 +261,5 @@
                 <category android:name="android.intent.category.DESK_DOCK" />
             </intent-filter>
         </activity>
-
     </application>
 </manifest>
