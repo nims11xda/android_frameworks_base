@@ -3475,6 +3475,12 @@ public final class Settings {
         public static final String TELO_RADIO_HIGH_POWER = "telo_radio_high_power";
 
         /**
+         *  Enable statusbar double tap gesture on to put device to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -4539,7 +4545,7 @@ public final class Settings {
          */
         public static final String LOCK_BEFORE_UNLOCK = "lock_before_unlock";
 
-        /**
+         /**
          * Determines the width and height of the LockPatternView widget
          * @hide
          */
