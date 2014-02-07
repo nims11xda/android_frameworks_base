@@ -556,7 +556,6 @@ public class PanelView extends FrameLayout {
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
-
     public void setExpandedHeight(float height) {
         if (DEBUG) logf("setExpandedHeight(%.1f)", height);
         mRubberbanding = false;

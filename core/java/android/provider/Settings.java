@@ -2781,6 +2781,18 @@ public final class Settings {
           */
          public static final String KEY_MENU_ACTION = "key_menu_action";
 
+        /**
+         * Whether to unlock the screen with the home key.  The value is boolean (1 or 0).
+         * @hide
+         */
+        public static final String HOME_UNLOCK_SCREEN = "home_unlock_screen";
+
+        /**
+         * Whether to unlock the menu key.  The value is boolean (1 or 0).
+         * @hide
+         */
+        public static final String MENU_UNLOCK_SCREEN = "menu_unlock_screen";
+
          /**
           * Action to perform when the menu key is long-pressed.
           * (Default is 0 on devices with a search key, 3 on devices without)
@@ -3097,6 +3109,20 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_CLOCK = "status_bar_clock";
+
+        /**
+         * Should Dialer suggest nearby phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_SUGGESTIONS = "enable_dialer_suggestions";
+
+        /**
+         * Should Dialer reverse look up names for unknown phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_REVERSE_LOOKUP = "enable_dialer_reverse_lookup";
 
         /**
          * AM/PM Style for clock options
@@ -3437,12 +3463,6 @@ public final class Settings {
        public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
 
         /**
-         * Whether to unlock the menu key.  The value is boolean (1 or 0).
-         * @hide
-         */
-        public static final String MENU_UNLOCK_SCREEN = "menu_unlock_screen";
-
-        /**
          *  TeloRadio Low power network
          * @hide
          */
@@ -3453,6 +3473,12 @@ public final class Settings {
          * @hide
          */
         public static final String TELO_RADIO_HIGH_POWER = "telo_radio_high_power";
+
+        /**
+         *  Enable statusbar double tap gesture on to put device to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -4517,7 +4543,7 @@ public final class Settings {
          */
         public static final String LOCK_BEFORE_UNLOCK = "lock_before_unlock";
 
-        /**
+         /**
          * Determines the width and height of the LockPatternView widget
          * @hide
          */
