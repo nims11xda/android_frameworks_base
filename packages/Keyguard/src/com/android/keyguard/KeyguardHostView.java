@@ -722,6 +722,9 @@ public class KeyguardHostView extends KeyguardViewBase {
             case Password:
                 messageId = R.string.kg_too_many_failed_password_attempts_dialog_message;
                 break;
+            case Gesture:
+                messageId = R.string.kg_too_many_failed_gesture_attempts_dialog_message;
+                break;
         }
 
         if (messageId != 0) {
@@ -874,6 +877,7 @@ public class KeyguardHostView extends KeyguardViewBase {
                 case PIN:
                 case Account:
                 case Biometric:
+                case Gesture:
                     finish = true;
                     break;
 
@@ -1224,6 +1228,7 @@ public class KeyguardHostView extends KeyguardViewBase {
             case Account: return R.id.keyguard_account_view;
             case SimPin: return R.id.keyguard_sim_pin_view;
             case SimPuk: return R.id.keyguard_sim_puk_view;
+            case Gesture: return R.id.keyguard_gesture_view;
         }
         return 0;
     }
@@ -1238,6 +1243,7 @@ public class KeyguardHostView extends KeyguardViewBase {
             case Account: return R.layout.keyguard_account_view;
             case SimPin: return R.layout.keyguard_sim_pin_view;
             case SimPuk: return R.layout.keyguard_sim_puk_view;
+            case Gesture: return R.layout.keyguard_gesture_view;
             default:
                 return 0;
         }
@@ -1792,11 +1798,15 @@ public class KeyguardHostView extends KeyguardViewBase {
         final boolean configDisabled = res.getBoolean(R.bool.config_disableMenuKeyInLockScreen);
         final boolean isTestHarness = ActivityManager.isRunningInTestHarness();
         final boolean fileOverride = (new File(ENABLE_MENU_KEY_FILE)).exists();
-        final boolean settingsEnabled = Settings.System.getIntForUser(
-                getContext().getContentResolver(),
-                Settings.System.MENU_UNLOCK_SCREEN, configDisabled ? 0 : 1,
-                UserHandle.USER_CURRENT) == 1;
-        return settingsEnabled || isTestHarness || fileOverride;
+        final boolean menuOverride = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.MENU_UNLOCK_SCREEN, 0) == 1;
+        return !configDisabled || isTestHarness || fileOverride || menuOverride;
+    }
+
+    private boolean shouldEnableHomeKey() {
+        final boolean homeOverride = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.HOME_UNLOCK_SCREEN, 0) == 1;
+        return homeOverride;
     }
 
     public void goToWidget(int appWidgetId) {
@@ -1807,6 +1817,15 @@ public class KeyguardHostView extends KeyguardViewBase {
     public boolean handleMenuKey() {
         // The following enables the MENU key to work for testing automation
         if (shouldEnableMenuKey()) {
+            showNextSecurityScreenOrFinish(false);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean handleHomeKey() {
+        // The following enables the HOME key to work for testing automation
+        if (shouldEnableHomeKey()) {
             showNextSecurityScreenOrFinish(false);
             return true;
         }
