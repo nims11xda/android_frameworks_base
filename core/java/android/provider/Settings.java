@@ -2923,6 +2923,13 @@ public final class Settings {
         public static final String CUSTOM_SOUND_EFFECTS_PATH = "custom_sound_effects_path";
 
         /**
+         * Whether navigation bar is placed on the left side in landscape mode
+         *
+         * @hide
+         */
+        public static final String NAVBAR_LEFT_IN_LANDSCAPE = "navigation_bar_left";
+
+        /**
          * A list of packages to exclude from being displayed as lockscreen notifications.
          * This should be a string of packages separated by |
          * @hide
@@ -3473,12 +3480,6 @@ public final class Settings {
          * @hide
          */
         public static final String TELO_RADIO_HIGH_POWER = "telo_radio_high_power";
-
-        /**
-         *  Enable statusbar double tap gesture on to put device to sleep
-         * @hide
-         */
-        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
