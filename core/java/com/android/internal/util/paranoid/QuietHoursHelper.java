@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2013 SlimRoms Project
+ * Copyright (C) 2014 ParanoidAndroid Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.slim;
+package com.android.internal.util.paranoid;
 
 import android.content.Context;
 import android.os.UserHandle;
@@ -47,11 +48,11 @@ public class QuietHoursHelper {
             if (quietHoursStart == quietHoursEnd) {
                 return true;
             }
-            // Get the date in "quiet hours" format.
+            // Get the date in "quiet hours" format
             Calendar calendar = Calendar.getInstance();
             int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
             if (quietHoursEnd < quietHoursStart) {
-                // Starts at night, ends in the morning.
+                // Starts at night, ends in the morning
                 return (minutes > quietHoursStart) || (minutes < quietHoursEnd);
             } else {
                 return (minutes > quietHoursStart) && (minutes < quietHoursEnd);

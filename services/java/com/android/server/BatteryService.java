@@ -18,7 +18,6 @@ package com.android.server;
 
 import android.os.BatteryStats;
 import com.android.internal.app.IBatteryStats;
-import com.android.internal.util.slim.QuietHoursHelper;
 import com.android.server.am.BatteryStatsService;
 
 import android.app.ActivityManagerNative;
@@ -51,6 +50,7 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 
 /**
  * <p>BatteryService monitors the charging status, and charge level of the device
@@ -725,19 +725,7 @@ public final class BatteryService extends Binder {
 
             final int level = mBatteryProps.batteryLevel;
             final int status = mBatteryProps.batteryStatus;
-
-            if (QuietHoursHelper.inQuietHours(mContext, Settings.System.QUIET_HOURS_DIM)) {
-                if (level < mLowBatteryWarningLevel &&
-                        status != BatteryManager.BATTERY_STATUS_CHARGING) {
-                    // The battery is low, the device is not charging and the low battery pulse
-                    // is enabled - ignore Quiet Hours
-                    mBatteryLight.setFlashing(mBatteryLowARGB, LightsService.LIGHT_FLASH_TIMED,
-                            mBatteryLedOn, mBatteryLedOff);
-                } else {
-                    // No lights if in Quiet Hours and battery not low
-                    mBatteryLight.turnOff();
-                }
-            } else if (level < mLowBatteryWarningLevel) {
+            if (level < mLowBatteryWarningLevel) {
                 if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
                     // Solid red when battery is charging
                     mBatteryLight.setColor(mBatteryLowARGB);
@@ -766,29 +754,5 @@ public final class BatteryService extends Binder {
         public void batteryPropertiesChanged(BatteryProperties props) {
             BatteryService.this.update(props);
        }
-    }
-
-    class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-
-            // Quiet Hours
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QUIET_HOURS_ENABLED), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QUIET_HOURS_START), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QUIET_HOURS_END), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.QUIET_HOURS_DIM), false, this,
-                    UserHandle.USER_ALL);
-        }
     }
 }
