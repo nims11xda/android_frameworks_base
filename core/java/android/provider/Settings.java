@@ -2768,12 +2768,6 @@ public final class Settings {
         public static final String EGG_MODE = "egg_mode";
 
         /**
-         * Whether national data roaming should be used.
-         * @hide
-         */
-        public static final String MVNO_ROAMING = "mvno_roaming";
-
-        /**
          * Whether or not to launch default music player when headset is connected
          * @hide
          */
@@ -3574,6 +3568,12 @@ public final class Settings {
             INCREASING_RING,
             RINGTONE,
             NOTIFICATION_SOUND,
+            QUIET_HOURS_ENABLED,
+            QUIET_HOURS_START,
+            QUIET_HOURS_END,
+            QUIET_HOURS_MUTE,
+            QUIET_HOURS_STILL,
+            QUIET_HOURS_DIM,
             TELO_RADIO_ENABLED,
             TELO_RADIO_2G_WIFI,
             TELO_RADIO_LTE,
