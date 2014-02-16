@@ -184,6 +184,10 @@ LOCAL_SRC_FILES += \
 	core/java/android/printservice/IPrintServiceClient.aidl \
 	core/java/android/service/dreams/IDreamManager.aidl \
 	core/java/android/service/dreams/IDreamService.aidl \
+	core/java/android/service/gesture/IGestureService.aidl \
+	core/java/android/service/gesture/IEdgeGestureService.aidl \
+	core/java/android/service/gesture/IEdgeGestureActivationListener.aidl \
+	core/java/android/service/gesture/IEdgeGestureHostCallback.aidl \
 	core/java/android/service/wallpaper/IWallpaperConnection.aidl \
 	core/java/android/service/wallpaper/IWallpaperEngine.aidl \
 	core/java/android/service/wallpaper/IWallpaperService.aidl \
@@ -633,9 +637,9 @@ web_docs_sample_code_flags := \
 		-samplecode $(sample_dir)/BasicSyncAdapter \
  		            samples/BasicSyncAdapter "" \
 		-samplecode $(sample_dir)/StorageClient \
- 		            samples/StorageClient "" 
+ 		            samples/StorageClient ""
 #		-samplecode $(sample_dir)/StorageProvider \
-# 		            samples/StorageProvider "" 
+# 		            samples/StorageProvider ""
 #       -samplecode $(sample_dir)/AndroidBeamDemo \
 # 		            samples/AndroidBeamDemo "Android Beam Demo" \
 # 		-samplecode $(sample_dir)/ApiDemos \

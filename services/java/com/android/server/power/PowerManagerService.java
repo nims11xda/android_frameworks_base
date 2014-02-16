@@ -299,7 +299,7 @@ public final class PowerManagerService extends IPowerManager.Stub
     // The current dock state.
     private int mDockState = Intent.EXTRA_DOCK_STATE_UNDOCKED;
 
-    // True if the device should wake up when plugged or unplugged. (default from config.xml) 
+    // True if the device should wake up when plugged or unplugged (default from config.xml)
     private boolean mWakeUpWhenPluggedOrUnpluggedConfig;
 
     // True if the device should suspend when the screen is off due to proximity.
@@ -621,7 +621,6 @@ public final class PowerManagerService extends IPowerManager.Stub
         mElectronBeamMode = Settings.System.getIntForUser(resolver,
                 Settings.System.SYSTEM_POWER_CRT_MODE,
                 1, UserHandle.USER_CURRENT);
-
 
         final int oldScreenBrightnessSetting = mScreenBrightnessSetting;
         mScreenBrightnessSetting = Settings.System.getIntForUser(resolver,
@@ -1428,6 +1427,7 @@ public final class PowerManagerService extends IPowerManager.Stub
 
     private boolean shouldWakeUpWhenPluggedOrUnpluggedLocked(
             boolean wasPowered, int oldPlugType, boolean dockedOnWirelessCharger) {
+
         // Don't wake when powered if disabled in settings.
         if (mWakeUpWhenPluggedOrUnpluggedSetting == 0) {
             return false;
