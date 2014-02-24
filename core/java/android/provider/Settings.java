@@ -1120,16 +1120,17 @@ public final class Settings {
             outKeySet.addAll(MOVED_TO_GLOBAL);
         }
 
-        /**
-     * Need to AOKP Custom Systems Animations
-     *
-     * Look up a boolean in the database.
-     * @param resolver to access the database with
-     * @param name to look up in the table
-     * @param def Value to return if the setting is not defined.
-     * @return The setting's current value, or 'def' if it is not defined
-     * or not a valid boolean.
-     */
+
+      /**
+       * Need to AOKP Custom Systems Animations
+       *
+       * Look up a boolean in the database.
+       * @param resolver to access the database with
+       * @param name to look up in the table
+       * @param def Value to return if the setting is not defined.
+       * @return The setting's current value, or 'def' if it is not defined
+       * or not a valid boolean.
+       */
         public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
             String v = getString(cr, name);
             try {
@@ -1141,21 +1142,22 @@ public final class Settings {
                 return def;
             }
         }
-    /**
-     * Need to AOKP Custom Systems Animations
-     *
-     * Convenience function for updating a single settings value as a
-     * boolean. This will either create a new entry in the table if the
-     * given name does not exist, or modify the value of the existing row
-     * with that name. Note that internally setting values are always
-     * stored as strings, so this function converts the given value to a
-     * string before storing it.
-     *
-     * @param cr The ContentResolver to access.
-     * @param name The name of the setting to modify.
-     * @param value The new value for the setting.
-     * @return true if the value was set, false on database errors
-     */
+
+      /**
+       * Need to AOKP Custom Systems Animations
+       *
+       * Convenience function for updating a single settings value as a
+       * boolean. This will either create a new entry in the table if the
+       * given name does not exist, or modify the value of the existing row
+       * with that name. Note that internally setting values are always
+       * stored as strings, so this function converts the given value to a
+       * string before storing it.
+       *
+       * @param cr The ContentResolver to access.
+       * @param name The name of the setting to modify.
+       * @param value The new value for the setting.
+       * @return true if the value was set, false on database errors
+       */
         public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
             return putString(cr, name, value ? "1" : "0");
         }
@@ -3369,13 +3371,20 @@ public final class Settings {
 
         public static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
 
+         /**
+         * Settings for clock font style
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_FONT_STYLE = "statusbar_clock_font_style";
+
+
         /**
          *  Enable statusbar double tap gesture on to put device to sleep
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
-         /**
+        /**
          * Quick Settings Quick Pulldown
          *
          * @hide
@@ -3431,26 +3440,6 @@ public final class Settings {
           */
          public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
-         /**
-          * Custom System Animations
-         *
-          * @hide
-          */
-         public static final String[] ACTIVITY_ANIMATION_CONTROLS = new String[] {
-                "activity_open",
-                "activity_close",
-                "task_open",
-                "task_close",
-                "task_to_front",
-                "task_to_back",
-                "wallpaper_open",
-                "wallpaper_close",
-                "wallpaper_intra_open",
-                "wallpaper_intra_close",
-         };
-         public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
-         public static final String ANIMATION_CONTROLS_NO_OVERRIDE = "animation_controls_no_override";
-
         /**
          * Override and forcefully disable the fullscreen keyboard
          * @hide
@@ -3479,35 +3468,6 @@ public final class Settings {
          * Force dual panel for settings
          */
         public static final String FORCE_DUAL_PANEL = "force_dualpanel";
-
-        /**
-         * ListView Animations
-         * 0 == None
-         * 1 == Wave (Left)
-         * 2 == Wave (Right)
-         * 3 == Scale
-         * 4 == Alpha
-         * 5 == Stack (Top)
-         * 6 == Stack (Bottom)
-         * 7 == Translate (Left)
-         * 8 == Translate (Right)
-         * @hide
-         */
-         public static final String LISTVIEW_ANIMATION = "listview_animation";
-
-        /**
-         * ListView Interpolators
-         * 0 == None
-         * 1 == accelerate_interpolator
-         * 2 == decelerate_interpolator
-         * 3 == accelerate_decelerate_interpolator
-         * 4 == anticipate_interpolator
-         * 5 == overshoot_interpolator
-         * 6 == anticipate_overshoot_interpolator
-         * 7 == bounce_interpolator
-         * @hide
-         */
-         public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
 
         /**
          * Should the non-intrsive incall ui be used
@@ -3626,6 +3586,138 @@ public final class Settings {
          * @hide
          */
         public static final String SCREEN_RECORDER_RECORD_AUDIO = "screen_recorder_record_audio";
+
+
+        /**
+         *
+         * @hide
+         */
+        public static final String[] ACTIVITY_ANIMATION_CONTROLS = new String[] {
+                "activity_open",
+                "activity_close",
+                "task_open",
+                "task_close",
+                "task_to_front",
+                "task_to_back",
+                "wallpaper_open",
+                "wallpaper_close",
+                "wallpaper_intra_open",
+                "wallpaper_intra_close",
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_CONTROLS_NO_SCROLL = "animation_controls_no_scroll";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_CONTROLS_NO_OVERRIDE = "animation_controls_no_override";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String LISTVIEW_ANIMATION_CACHE = "listview_animation_cache";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String LISTVIEW_ANIMATION_EXCLUDED_APPS = "listview_animation_excluded_apps";
+
+        /**
+         * ListView Animations
+         * 0 == None
+         * 1 == Wave (Left)
+         * 2 == Wave (Right)
+         * 3 == Scale
+         * 4 == Alpha
+         * 5 == Stack (Top)
+         * 6 == Stack (Bottom)
+         * 7 == Translate (Left)
+         * 8 == Translate (Right)
+         * @hide
+         */
+        public static final String LISTVIEW_ANIMATION = "listview_animation";
+
+        /**
+         * ListView Interpolators
+         * 0 == None
+         * 1 == accelerate_interpolator
+         * 2 == decelerate_interpolator
+         * 3 == accelerate_decelerate_interpolator
+         * 4 == anticipate_interpolator
+         * 5 == overshoot_interpolator
+         * 6 == anticipate_overshoot_interpolator
+         * 7 == bounce_interpolator
+         * @hide
+         */
+        public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
+
+
+        /**
+         *
+         * @hide
+         */
+        public static final String LISTVIEW_DURATION = "listview_duration";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_IME_DURATION = "animation_ime_duration";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_IME_ENTER = "animation_ime_enter";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_IME_EXIT = "animation_ime_exit";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String ANIMATION_IME_INTERPOLATOR = "animation_ime_interpolator";
+
+        /**
+         * Determine custom scroll friction.
+         * @hide
+         */
+        public static final String CUSTOM_SCROLL_FRICTION = "custom_scroll_friction";
+
+        /**
+         * Determine custom fling velocity.
+         * @hide
+         */
+        public static final String CUSTOM_FLING_VELOCITY = "custom_fling_velocity";
+
+        /**
+         * Determine custom overscroll distance.
+         * @hide
+         */
+        public static final String CUSTOM_OVERSCROLL_DISTANCE = "custom_overscroll_distance";
+
+        /**
+         * Determine custom overfling distance.
+         * @hide
+         */
+        public static final String CUSTOM_OVERFLING_DISTANCE = "custom_overfling_distance";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
