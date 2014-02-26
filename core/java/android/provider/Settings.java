@@ -2682,6 +2682,83 @@ public final class Settings {
         public static final String GESTURE_ANYWHERE_TRIGGER_HEIGHT = "gesture_anywhere_trigger_height";
 
         /**
+	*
+	* SMOOTH PROGRESS BAR interpolator
+	* @hide
+	*/
+        public static final String PROGRESSBAR_INTERPOLATOR = "progressbar_interpolator";
+
+	/**
+	*
+	* SMOOTH PROGRESS BAR Mirror
+	* @hide
+	*/
+        public static final String PROGRESSBAR_MIRROR = "progressbar_mirror";
+
+	/**
+	*
+	* SMOOTH PROGRESS BAR Reverse
+	* @hide
+	*/
+        public static final String PROGRESSBAR_REVERSE = "progressbar_reverse";
+
+	/**
+	*
+	* SMOOTH PROGRESS BAR Speed
+	* @hide
+	*/
+        public static final String PROGRESSBAR_SPEED = "progressbar_speed";
+
+       /**
+	*
+	* SMOOTH PROGRESS BAR Width
+	* @hide
+	*/
+        public static final String PROGRESSBAR_WIDTH = "progressbar_width";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Length
+	* @hide
+	*/
+        public static final String PROGRESSBAR_LENGTH = "progressbar_length";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Count
+	* @hide
+	*/
+        public static final String PROGRESSBAR_COUNT = "progressbar_count";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Color_1
+	* @hide
+	*/
+        public static final String PROGRESSBAR_COLOR_1 = "progressbar_color_1";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Color_2
+	* @hide
+	*/
+        public static final String PROGRESSBAR_COLOR_2 = "progressbar_color_2";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Color_3
+	* @hide
+	*/
+        public static final String PROGRESSBAR_COLOR_3 = "progressbar_color_3";
+
+        /**
+	*
+	* SMOOTH PROGRESS BAR Color_4
+	* @hide
+	*/
+        public static final String PROGRESSBAR_COLOR_4 = "progressbar_color_4";
+
+        /**
          * Whether to display the gesture anywhere trigger region or not.
          * Used internally for showing the trigger in settings so user can see its placement
          * @hide
@@ -3135,6 +3212,27 @@ public final class Settings {
          * @hide
          */
          public static final String MEDIA_SCANNER_ON_BOOT = "media_scanner_on_boot";
+
+        /**
+         * Reminder alert on / off
+         * @hide
+         */
+        public static final String REMINDER_ALERT_ENABLED = "reminder_alert_enabled";
+
+        /**
+         * Reminder alert extras
+         *  0 = no alert
+         *  1 = alert rings once
+         *  2 = alert rings until dismissed
+         * @hide
+         */
+        public static final String REMINDER_ALERT_NOTIFY = "reminder_alert_notify";
+
+        /**
+         * Reminder alert ringer
+         * @hide
+         */
+        public static final String REMINDER_ALERT_RINGER = "reminder_alert_ringer";
 
 
         /**
@@ -3603,6 +3701,7 @@ public final class Settings {
                 "wallpaper_close",
                 "wallpaper_intra_open",
                 "wallpaper_intra_close",
+		"toast_animation",
         };
 
         /**
