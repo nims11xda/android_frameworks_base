@@ -34,6 +34,7 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,6 +45,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -71,6 +73,7 @@ import com.android.systemui.statusbar.phone.PhoneStatusBar;
 
 import com.android.internal.util.MemInfoReader;
 
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -364,6 +367,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentsActivity.setRecentHints(show && getTasks() > 0);
 
         if (show) {
+            boolean noApps = mRecentTaskDescriptions != null
+                    && (mRecentTaskDescriptions.size() == 0);
             // if there are no apps, bring up a "No recent apps" message
             mRecentsNoApps.setAlpha(1f);
             mRecentsNoApps.setVisibility(getTasks() == 0 ? View.VISIBLE : View.INVISIBLE);
@@ -372,6 +377,33 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                     "100"));
             mClearRecents.setVisibility(navBarPercent == 0 && getTasks() > 0 ? View.VISIBLE : View.GONE);*/
             mClearRecents.setVisibility(getTasks() == 0 ? View.GONE : View.VISIBLE);
+
+            boolean showClearAllButton = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.SHOW_CLEAR_RECENTS_BUTTON, 1) == 1;
+            if (showClearAllButton) {
+                mClearRecents.setVisibility(noApps ? View.GONE : View.VISIBLE);
+                int clearAllButtonLocation = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.CLEAR_RECENTS_BUTTON_LOCATION, Constants.CLEAR_ALL_BUTTON_BOTTOM_LEFT);
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams)mClearRecents.getLayoutParams();
+                switch (clearAllButtonLocation) {
+                    case Constants.CLEAR_ALL_BUTTON_TOP_LEFT:
+                        layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
+                        break;
+                    case Constants.CLEAR_ALL_BUTTON_TOP_RIGHT:
+                        layoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
+                        break;
+                    case Constants.CLEAR_ALL_BUTTON_BOTTOM_RIGHT:
+                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                        break;
+                    case Constants.CLEAR_ALL_BUTTON_BOTTOM_LEFT:
+                    default:
+                        layoutParams.gravity = Gravity.BOTTOM | Gravity.LEFT;
+                        break;
+                }
+                mClearRecents.setLayoutParams(layoutParams);
+            } else {
+                mClearRecents.setVisibility(View.GONE);
+            }
             onAnimationEnd(null);
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -492,6 +524,23 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 @Override
                 public void onClick(View v) {
                     mRecentsContainer.swipeAllViewsInLayout();
+                }
+            });
+            mClearRecents.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    ((ViewGroup) mRecentsContainer).removeAllViewsInLayout();
+                    try {
+                         ProcessBuilder pb = new ProcessBuilder("su", "-c", "/system/bin/sh");
+                        OutputStreamWriter osw = new OutputStreamWriter(pb.start().getOutputStream());
+                        osw.write("sync" + "\n" + "echo 3 > /proc/sys/vm/drop_caches" + "\n");
+                        osw.write("\nexit\n");
+                        osw.flush();
+                         osw.close();
+                   } catch (Exception e) {
+                        Log.d(TAG, "Flush caches failed!");
+                    }
+                    return true;
                 }
             });
         }
@@ -901,7 +950,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
                 mRamUsageBar.setVisibility(View.VISIBLE);
                 updateMemoryInfo();
-   
+
                 switch (mRamBarMode) {
                     case 1:
                         usedMem = mActiveMemory;
@@ -1038,5 +1087,17 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         } finally {
             reader.close();
         }
+    }
+
+    @Override
+    protected boolean fitSystemWindows(Rect insets) {
+        if (mClearRecents != null) {
+            MarginLayoutParams lp = (MarginLayoutParams) mClearRecents.getLayoutParams();
+            lp.topMargin = insets.top;
+            lp.rightMargin = insets.right;
+            mClearRecents.setLayoutParams(lp);
+        }
+
+        return super.fitSystemWindows(insets);
     }
 }

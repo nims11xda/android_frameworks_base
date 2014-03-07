@@ -37,12 +37,14 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
+import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
@@ -95,7 +97,7 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
     int mDisabledFlags = 0;
     int mNavigationIconHints = 0;
     boolean mWasNotifsButtonVisible = false;
-    
+
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon,
             mRecentIcon, mRecentLandIcon, mRecentAltIcon, mRecentAltLandIcon;
 
@@ -113,6 +115,8 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
 
     // performs manual animation in sync with layout transitions
     private final NavTransitionListener mTransitionListener = new NavTransitionListener();
+
+    private GestureDetector mDoubleTapGesture;
 
     private class NavTransitionListener implements TransitionListener {
         private boolean mBackTransitioning;
@@ -250,6 +254,16 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
         mNavBarReceiver = new NavBarReceiver();
         mContext.registerReceiverAsUser(mNavBarReceiver, UserHandle.ALL,
                 new IntentFilter(NAVBAR_EDIT_ACTION), null, null);
+
+        mDoubleTapGesture = new GestureDetector(mContext,
+                new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                if (pm != null) pm.goToSleep(e.getEventTime());
+                return true;
+            }
+        });
     }
 
     private void watchForDevicePolicyChanges() {
@@ -288,6 +302,10 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
             boolean ret = mDelegateHelper.onInterceptTouchEvent(event);
             if (ret) return true;
         }
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE, 0) == 1)
+            mDoubleTapGesture.onTouchEvent(event);
+
         return super.onTouchEvent(event);
     }
 

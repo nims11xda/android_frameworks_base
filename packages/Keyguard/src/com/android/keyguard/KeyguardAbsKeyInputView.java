@@ -301,4 +301,3 @@ public abstract class KeyguardAbsKeyInputView extends LinearLayout
                 hideBouncer(mSecurityMessageDisplay, mEcaView, mBouncerFrame, duration);
     }
 }
-
