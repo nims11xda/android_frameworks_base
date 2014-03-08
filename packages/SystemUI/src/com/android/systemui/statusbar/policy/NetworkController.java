@@ -1726,6 +1726,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                             mMobileActivityIconId,
                             mDemoDataTypeIconId,
                             "Demo",
+                            "Demo",
                             mNoSimIconId);
                 }
             }
