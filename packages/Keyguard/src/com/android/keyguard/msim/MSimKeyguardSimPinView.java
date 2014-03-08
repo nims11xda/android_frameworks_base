@@ -222,7 +222,7 @@ public class MSimKeyguardSimPinView extends KeyguardSimPinView {
                                 closeKeyGuard(success);
                             } else {
                                 mSecurityMessageDisplay.setMessage(getSecurityMessageDisplay
-                                        (R.string.kg_password_wrong_pin_code), true);
+                                        (R.plurals.kg_password_wrong_pin_code), true);
                                 mPasswordEntry.setText("");
                             }
                             mCallback.userActivity(0);
@@ -242,4 +242,3 @@ public class MSimKeyguardSimPinView extends KeyguardSimPinView {
                 getContext().getResources().getText(resId));
     }
 }
-

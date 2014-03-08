@@ -3950,6 +3950,14 @@ public final class Settings {
             LOCKSCREEN_ALWAYS_SHOW_BATTERY,
         };
 
+        /**
+         * Settings to reset on user choice. They will fall back to their default value (0).
+         *
+         * @hide
+         */
+        public static final String[] SETTINGS_TO_RESET = {
+        };
+
         // Settings moved to Settings.Secure
 
         /**
