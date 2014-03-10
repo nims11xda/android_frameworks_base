@@ -690,7 +690,7 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
                 // mobile templates are relevant when SIM is ready and
                 // subscriberId matches.
                 if (tele.getSimState() == SIM_STATE_READY) {
-                    return Objects.equal(tele.getSubscriberId(), template.getSubscriberId());
+                    return Objects.equals(tele.getSubscriberId(), template.getSubscriberId());
                 } else {
                     return false;
                 }
@@ -948,7 +948,7 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
                 // TODO: offer more granular control over radio states once
                 // 4965893 is available.
                 if (tele.getSimState() == SIM_STATE_READY
-                        && Objects.equal(tele.getSubscriberId(), template.getSubscriberId())) {
+                        && Objects.equals(tele.getSubscriberId(), template.getSubscriberId())) {
                     setPolicyDataEnable(TYPE_MOBILE, enabled);
                     setPolicyDataEnable(TYPE_WIMAX, enabled);
                 }

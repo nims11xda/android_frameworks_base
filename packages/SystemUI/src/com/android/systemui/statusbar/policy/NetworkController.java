@@ -317,17 +317,6 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
         mDataTypeIconViews.add(v);
     }
 
-    protected void registerPhoneStateListener(Context context) {
-        // telephony
-        mPhone = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-        mPhone.listen(mPhoneStateListener,
-                          PhoneStateListener.LISTEN_SERVICE_STATE
-                        | PhoneStateListener.LISTEN_SIGNAL_STRENGTHS
-                        | PhoneStateListener.LISTEN_CALL_STATE
-                        | PhoneStateListener.LISTEN_DATA_CONNECTION_STATE
-                        | PhoneStateListener.LISTEN_DATA_ACTIVITY);
-    }
-
     public void addCombinedLabelView(TextView v) {
         mCombinedLabelViews.add(v);
     }
