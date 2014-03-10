@@ -139,8 +139,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     private Locale mLastLocale = null;
 
     // our ui
-<<<<<<< HEAD
-    protected Context mContext;
+    Context mContext;
     ArrayList<ImageView> mPhoneSignalIconViews = new ArrayList<ImageView>();
     ArrayList<ImageView> mDataDirectionIconViews = new ArrayList<ImageView>();
     ArrayList<ImageView> mDataDirectionOverlayIconViews = new ArrayList<ImageView>();
@@ -148,9 +147,6 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     ArrayList<ImageView> mWimaxIconViews = new ArrayList<ImageView>();
     ArrayList<ImageView> mCombinedSignalIconViews = new ArrayList<ImageView>();
     ArrayList<ImageView> mDataTypeIconViews = new ArrayList<ImageView>();
-=======
-    Context mContext;
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
     ArrayList<TextView> mCombinedLabelViews = new ArrayList<TextView>();
     ArrayList<TextView> mMobileLabelViews = new ArrayList<TextView>();
     ArrayList<TextView> mWifiLabelViews = new ArrayList<TextView>();
@@ -167,12 +163,8 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     int mLastDataTypeIconId = -1;
     String mLastCombinedLabel = "";
 
-<<<<<<< HEAD
-    protected boolean mHasMobileDataFeature;
-    private boolean mNetworkIndicatorsEnabled;
-=======
     private boolean mHasMobileDataFeature;
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
+    private boolean mNetworkIndicatorsEnabled;
 
     boolean mDataAndWifiStacked = false;
 
@@ -195,14 +187,8 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     public interface SignalCluster {
         void setWifiIndicators(boolean visible, int strengthIcon, int activityIcon,
                 String contentDescription);
-<<<<<<< HEAD
         void setMobileDataIndicators(boolean visible, int strengthIcon, int activityIcon,
-                int typeIcon, String contentDescription, String typeContentDescription,
-                int noSimIcon);
-=======
-        void setMobileDataIndicators(boolean visible, int strengthIcon,
                 int typeIcon, String contentDescription, String typeContentDescription);
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
         void setIsAirplaneMode(boolean is, int airplaneIcon);
     }
 
@@ -304,7 +290,6 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
         return (mServiceState != null && mServiceState.isEmergencyOnly());
     }
 
-<<<<<<< HEAD
     public void addPhoneSignalIconView(ImageView v) {
         mPhoneSignalIconViews.add(v);
     }
@@ -343,8 +328,6 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                         | PhoneStateListener.LISTEN_DATA_ACTIVITY);
     }
 
-=======
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
     public void addCombinedLabelView(TextView v) {
         mCombinedLabelViews.add(v);
     }
@@ -1685,13 +1668,8 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                     cluster.setWifiIndicators(
                             show,
                             iconId,
-<<<<<<< HEAD
                             mWifiActivityIconId,
-                            "Demo",
-                            mNoSimIconId);
-=======
                             "Demo");
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
                 }
             }
             String mobile = args.getString("mobile");

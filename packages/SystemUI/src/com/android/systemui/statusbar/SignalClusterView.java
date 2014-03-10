@@ -48,11 +48,7 @@ public class SignalClusterView
     private String mWifiDescription, mMobileDescription, mMobileTypeDescription;
 
     ViewGroup mWifiGroup, mMobileGroup;
-<<<<<<< HEAD
-    ImageView mWifi, mMobile, mWifiActivity, mMobileActivity, mMobileType, mAirplane, mNoSimSlot;
-=======
-    ImageView mWifi, mMobile, mMobileType, mAirplane;
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
+    ImageView mWifi, mMobile, mWifiActivity, mMobileActivity, mMobileType, mAirplane;
     View mSpacer;
 
     public SignalClusterView(Context context) {
@@ -116,14 +112,8 @@ public class SignalClusterView
     }
 
     @Override
-<<<<<<< HEAD
     public void setMobileDataIndicators(boolean visible, int strengthIcon, int activityIcon,
-            int typeIcon, String contentDescription, String typeContentDescription,
-            int noSimIcon) {
-=======
-    public void setMobileDataIndicators(boolean visible, int strengthIcon,
             int typeIcon, String contentDescription, String typeContentDescription) {
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
         mMobileVisible = visible;
         mMobileStrengthId = strengthIcon;
         mMobileActivityId = activityIcon;

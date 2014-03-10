@@ -74,12 +74,7 @@ import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
-<<<<<<< HEAD
 import android.support.v4.app.NotificationCompat;
-import android.telephony.MSimTelephonyManager;
-import android.telephony.TelephonyManager;
-=======
->>>>>>> parent of c51119b... Telephony(MSIM): Add StatusBar support for MultiSim.
 import android.util.DisplayMetrics;
 import android.util.EventLog;
 import android.util.Log;
