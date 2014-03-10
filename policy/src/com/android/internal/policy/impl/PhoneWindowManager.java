@@ -5804,9 +5804,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             return false;
         }
         final boolean hapticsDisabled = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.HAPTIC_FEEDBACK_ENABLED, 1, UserHandle.USER_CURRENT) == 0;
-        if (!always && (hapticsDisabled || (mKeyguardDelegate != null
-                && mKeyguardDelegate.isShowingAndNotHidden())) {
+                Settings.System.HAPTIC_FEEDBACK_ENABLED, 0, UserHandle.USER_CURRENT) == 0;
+        if (!always && (hapticsDisabled || mKeyguardDelegate.isShowingAndNotHidden())) {
             return false;
         }
         long[] pattern = null;
