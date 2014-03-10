@@ -290,7 +290,6 @@
   <java-symbol type="bool" name="config_forceDefaultOrientation" />
   <java-symbol type="bool" name="config_wifi_batched_scan_supported" />
   <java-symbol type="bool" name="flip_controller_fallback_keys" />
-  <java-symbol type="bool" name="skip_radio_power_off_on_sim_refresh_reset" />
 
   <java-symbol type="integer" name="config_cursorWindowSize" />
   <java-symbol type="integer" name="config_extraFreeKbytesAdjust" />
@@ -459,7 +458,6 @@
   <java-symbol type="string" name="badPin" />
   <java-symbol type="string" name="badPuk" />
   <java-symbol type="string" name="lockscreen_sim_error_message_short" />
-  <java-symbol type="string" name="pinpuk_attempts" />
   <java-symbol type="string" name="byteShort" />
   <java-symbol type="string" name="capability_desc_canRequestEnhancedWebAccessibility" />
   <java-symbol type="string" name="capability_title_canRequestFilterKeyEvents" />
@@ -636,7 +634,6 @@
   <java-symbol type="string" name="orgTypeOther" />
   <java-symbol type="string" name="orgTypeWork" />
   <java-symbol type="string" name="passwordIncorrect" />
-  <java-symbol type="string" name="enablePin" />
   <java-symbol type="string" name="perms_description_app" />
   <java-symbol type="string" name="perms_new_perm_prefix" />
   <java-symbol type="string" name="petabyteShort" />
