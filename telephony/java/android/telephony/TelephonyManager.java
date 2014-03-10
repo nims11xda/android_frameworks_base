@@ -843,7 +843,7 @@ public class TelephonyManager {
             case NETWORK_TYPE_GSM:
                 return "GSM";
             case NETWORK_TYPE_TD_SCDMA:
-                return "TD-SCDMA";
+                return "TD_SCDMA";
             default:
                 return "UNKNOWN";
         }
