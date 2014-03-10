@@ -691,7 +691,7 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
                 // subscriberId matches.
                 if (NetworkIdentity.isDdsReady()) {
                     // multi sim data traffic statistics
-                    return Objects.equals(NetworkIdentity.getDdsSubscriberId(),
+                    return Objects.equal(NetworkIdentity.getDdsSubscriberId(),
                             template.getSubscriberId());
                 } else {
                     return false;
@@ -948,7 +948,7 @@ public class NetworkPolicyManagerService extends INetworkPolicyManager.Stub {
                 // TODO: offer more granular control over radio states once
                 // 4965893 is available.
                 if (NetworkIdentity.isDdsReady()
-                        && Objects.equals(NetworkIdentity.getDdsSubscriberId(),
+                        && Objects.equal(NetworkIdentity.getDdsSubscriberId(),
                                 template.getSubscriberId())) {
                     setPolicyDataEnable(TYPE_MOBILE, enabled);
                     setPolicyDataEnable(TYPE_WIMAX, enabled);

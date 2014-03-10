@@ -1025,11 +1025,7 @@ public class MSimNetworkController extends NetworkController {
                     mHasMobileDataFeature ? mMSimDataSignalIconId[subscription] : mWifiIconId;
             mMSimContentDescriptionCombinedSignal[subscription] = mHasMobileDataFeature
                     ? mMSimContentDescriptionDataType[subscription] : mContentDescriptionWifi;
-        }
 
-        if (!mMSimDataConnected[subscription]) {
-            Slog.d(TAG, "refreshViews: Data not connected!! Set no data type icon / Roaming for"
-                    + " subscription: " + subscription);
             mMSimDataTypeIconId[subscription] = 0;
             if (isCdma(subscription)) {
                 if (isCdmaEri(subscription)) {
@@ -1040,12 +1036,6 @@ public class MSimNetworkController extends NetworkController {
                 mMSimDataTypeIconId[subscription] = R.drawable.stat_sys_data_fully_connected_roam;
             }
         }
-
-        if (!mAirplaneMode && mMSimState[subscription] == IccCardConstants.State.ABSENT) {
-            mMSimPhoneSignalIconId[subscription] = mMSimDataSignalIconId[subscription]
-                    = mMSimDataTypeIconId[subscription] = 0;
-        }
-
         if (DEBUG) {
             Slog.d(TAG, "refreshViews connected={"
                     + (mWifiConnected?" wifi":"")

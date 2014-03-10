@@ -61,7 +61,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
     // debug
     static final String TAG = "StatusBar.NetworkController";
     static final boolean DEBUG = false;
-    static final boolean CHATTY = true; // additional diagnostics, but not logspew
+    static final boolean CHATTY = false; // additional diagnostics, but not logspew
 
     private static final int FLIGHT_MODE_ICON = R.drawable.stat_sys_signal_flightmode;
 
@@ -535,7 +535,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
         }
     };
 
-    protected void updateSimState(Intent intent) {
+    protected final void updateSimState(Intent intent) {
         String stateExtra = intent.getStringExtra(IccCardConstants.INTENT_KEY_ICC_STATE);
         if (IccCardConstants.INTENT_VALUE_ICC_ABSENT.equals(stateExtra)) {
             mSimState = IccCardConstants.State.ABSENT;
@@ -1252,6 +1252,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
         }
 
         if (!mDataConnected) {
+            Log.d(TAG, "refreshViews: Data not connected!! Set no data type icon / Roaming");
             mDataTypeIconId = 0;
             mQSDataTypeIconId = 0;
             if (isCdma()) {
@@ -1278,12 +1279,6 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                 combinedLabel = customLabel;
             }
             mobileLabel = customLabel;
-        }
-
-        if (!mAirplaneMode && mSimState == IccCardConstants.State.ABSENT) {
-            // look again; your radios are now sim cards
-            mPhoneSignalIconId = mDataSignalIconId = mDataTypeIconId = mQSDataTypeIconId = 0;
-            mQSPhoneSignalIconId = 0;
         }
 
         if (DEBUG) {
@@ -1691,7 +1686,8 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                             show,
                             iconId,
                             mWifiActivityIconId,
-                            "Demo");
+                            "Demo",
+                            mNoSimIconId);
                 }
             }
             String mobile = args.getString("mobile");
@@ -1726,8 +1722,7 @@ public class NetworkController extends BroadcastReceiver implements DemoMode {
                             mMobileActivityIconId,
                             mDemoDataTypeIconId,
                             "Demo",
-                            "Demo",
-                            mNoSimIconId);
+                            "Demo");
                 }
             }
         }
