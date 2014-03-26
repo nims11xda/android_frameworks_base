@@ -44,7 +44,6 @@ import android.view.InputDevice;
 
 import com.android.internal.app.IAppOpsService;
 import com.android.internal.app.IBatteryStats;
-import com.android.internal.util.paranoid.QuietHoursHelper;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

@@ -32,7 +32,6 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.android.internal.util.slim.QuietHoursHelper;
 import com.android.systemui.service.ReminderService;
 
 public class ReminderReceiver extends BroadcastReceiver {
@@ -87,9 +86,7 @@ public class ReminderReceiver extends BroadcastReceiver {
                             0, UserHandle.USER_CURRENT);
                 PendingIntent result = null;
                 Intent serviceIntent = new Intent(context, ReminderService.class);
-                if (alertMode != 0
-                        && !QuietHoursHelper.inQuietHours(
-                        context, Settings.System.QUIET_HOURS_MUTE)) {
+                if (alertMode != 0) {
                     context.startService(serviceIntent);
                 }
 

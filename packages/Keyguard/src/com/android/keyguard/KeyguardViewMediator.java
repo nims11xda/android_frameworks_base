@@ -584,10 +584,6 @@ public class KeyguardViewMediator {
         mKeyguardViewManager.setBackgroundBitmap(bmp);
     }
 
-    public void setWallpaper(Bitmap bmp) {
-        mKeyguardViewManager.setWallpaper(bmp);
-    }
-
     /**
      * Let us know that the system is ready after startup.
      */
@@ -927,22 +923,6 @@ public class KeyguardViewMediator {
      * Enable the keyguard if the settings are appropriate.
      */
     private void doKeyguardLocked(Bundle options) {
-        // if another app is disabling us, don't show
-        if (!mExternallyEnabled) {
-            if (DEBUG) Log.d(TAG, "doKeyguard: not showing because externally disabled");
-
-            // note: we *should* set mNeedToReshowWhenReenabled=true here, but that makes
-            // for an occasional ugly flicker in this situation:
-            // 1) receive a call with the screen on (no keyguard) or make a call
-            // 2) screen times out
-            // 3) user hits key to turn screen back on
-            // instead, we reenable the keyguard when we know the screen is off and the call
-            // ends (see the broadcast receiver below)
-            // TODO: clean this up when we have better support at the window manager level
-            // for apps that wish to be on top of the keyguard
-            return;
-        }
-
         // if the keyguard is already showing, don't bother
         if (mKeyguardViewManager.isShowing()) {
             if (DEBUG) Log.d(TAG, "doKeyguard: not showing because it is already showing");
@@ -962,6 +942,22 @@ public class KeyguardViewMediator {
         if (!lockedOrMissing && !provisioned) {
             if (DEBUG) Log.d(TAG, "doKeyguard: not showing because device isn't provisioned"
                     + " and the sim is not locked or missing");
+            return;
+        }
+
+        // if another app is disabling us, don't show
+        if (!mExternallyEnabled && !lockedOrMissing) {
+            if (DEBUG) Log.d(TAG, "doKeyguard: not showing because externally disabled");
+
+            // note: we *should* set mNeedToReshowWhenReenabled=true here, but that makes
+            // for an occasional ugly flicker in this situation:
+            // 1) receive a call with the screen on (no keyguard) or make a call
+            // 2) screen times out
+            // 3) user hits key to turn screen back on
+            // instead, we reenable the keyguard when we know the screen is off and the call
+            // ends (see the broadcast receiver below)
+            // TODO: clean this up when we have better support at the window manager level
+            // for apps that wish to be on top of the keyguard
             return;
         }
 
@@ -1201,7 +1197,7 @@ public class KeyguardViewMediator {
     protected void handleDispatchButtonClickEvent(int buttonId) {
         mKeyguardViewManager.dispatchButtonClick(buttonId);
     }
-
+    
     private void sendUserPresentBroadcast() {
         final UserHandle currentUser = new UserHandle(mLockPatternUtils.getCurrentUser());
         mContext.sendBroadcastAsUser(USER_PRESENT_INTENT, currentUser);
@@ -1441,7 +1437,7 @@ public class KeyguardViewMediator {
         msg.arg1 = buttonId;
         mHandler.sendMessage(msg);
     }
-
+    
     public void launchCamera() {
         Message msg = mHandler.obtainMessage(LAUNCH_CAMERA);
         mHandler.sendMessage(msg);

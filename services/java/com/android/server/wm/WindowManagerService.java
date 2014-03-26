@@ -10232,13 +10232,13 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     @Override
-    public boolean hasMenuKeyEnabled() {
-        return mPolicy.hasMenuKeyEnabled();
+    public boolean needsNavigationBar() {
+        return mPolicy.needsNavigationBar();
     }
 
     @Override
-    public boolean wantsNavigationBar() {
-        return mPolicy.wantsNavigationBar();
+    public boolean hasMenuKeyEnabled() {
+        return mPolicy.hasMenuKeyEnabled();
     }
 
     @Override

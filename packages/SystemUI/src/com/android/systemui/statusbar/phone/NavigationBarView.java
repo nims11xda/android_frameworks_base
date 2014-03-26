@@ -237,7 +237,7 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
         mLeftInLandscape = false;
         mDelegateHelper = new DelegateViewHelper(this);
 
-        RecentsActivity.setNavigationCallback(this);
+        RecentsActivity.addNavigationCallback(this);
 
         getIcons(res);
 
@@ -419,6 +419,7 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
         setNavigationIconHints(hints, false);
     }
 
+    @Override
     public void setNavigationIconHints(int hints, boolean force) {
         if (!force && hints == mNavigationIconHints) return;
         final boolean backAlt = (hints & StatusBarManager.NAVIGATION_HINT_BACK_ALT) != 0;
@@ -474,6 +475,8 @@ public class NavigationBarView extends LinearLayout implements NavigationCallbac
             }
         });
     }
+
+    @Override
     public int getNavigationIconHints() {
         return mNavigationIconHints;
     }

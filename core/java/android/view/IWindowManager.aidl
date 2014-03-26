@@ -197,7 +197,7 @@ interface IWindowManager
     void thawRotation();
 
     /**
-     * Gets whether the rotation is frozen.
+     * Gets whether the rotation is frozen. 
      *
      * @return Whether the rotation is frozen.
      */
@@ -226,14 +226,14 @@ interface IWindowManager
     boolean hasNavigationBar();
 
     /**
+     * Device needs a software navigation bar (because it has no hardware keys).
+     */
+    boolean needsNavigationBar();
+
+    /**
      * Device can generate KEY_ACTION_MENU keypress
      */
     boolean hasMenuKeyEnabled();
-
-    /**
-     * Device wants a navigation bar (becuase it has hardware keys)
-     */
-    boolean wantsNavigationBar();
 
     /**
      * Lock the device immediately with the specified options (can be null).
