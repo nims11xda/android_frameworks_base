@@ -47,6 +47,7 @@ public abstract class Ticker {
     private ImageSwitcher mIconSwitcher;
     private TextSwitcher mTextSwitcher;
     private float mIconScale;
+<<<<<<< HEAD
     private TickerCallback mEvent;
 
     public interface TickerCallback {
@@ -56,6 +57,9 @@ public abstract class Ticker {
     public void setUpdateEvent(TickerCallback event) {
         mEvent = event;
     }
+=======
+    private PhoneStatusBar mStatusBar;
+>>>>>>> 4b45d28... Initial Chameleon Engine
 
     public static boolean isGraphicOrEmoji(char c) {
         int gc = Character.getType(c);
@@ -252,6 +256,8 @@ public abstract class Ticker {
             tickerStarting();
             scheduleAdvance();
         }
+        mStatusBar.setColorToAllTextSwitcherChildren(mTextSwitcher);
+        mStatusBar.setColorToAllImageSwitcherChildren(mIconSwitcher);
     }
 
     private static boolean charSequencesEqual(CharSequence a, CharSequence b) {
@@ -320,6 +326,12 @@ public abstract class Ticker {
 
     private void scheduleAdvance() {
         mHandler.postDelayed(mAdvanceTicker, TICKER_SEGMENT_DELAY);
+    }
+
+    public void setStatusBar(PhoneStatusBar mStatusBar) {
+        this.mStatusBar = mStatusBar;
+        mStatusBar.setColorToAllTextSwitcherChildren(mTextSwitcher);
+        mStatusBar.setColorToAllImageSwitcherChildren(mIconSwitcher);
     }
 
     public abstract void tickerStarting();
