@@ -1222,7 +1222,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mCircleBattery = (BatteryCircleMeterView) mStatusBarView.findViewById(R.id.circle_battery);
         mNetworkController.setListener(this);
 
-        updateBackground();
         return mStatusBarView;
     }
 
@@ -3412,6 +3411,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
             else if (Intent.ACTION_SCREEN_ON.equals(action)) {
                 mScreenOn = true;
+                mMustChange = true;
                 // work around problem where mDisplay.getRotation() is not stable while screen is off (bug 7086018)
                 repositionNavigationBar();
                 notifyNavigationBarScreenOn(true);
@@ -3810,7 +3810,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             ((DemoMode)v).dispatchDemoCommand(command, args);
         }
     }
-    
+
     boolean black = false;
 
 	public void transform(boolean isBlack) {
@@ -3831,8 +3831,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 				mCurrentColor = mWhiteColor;
 				refresh();
 			}
-		}
-	}
+        }
+    }
 
 	private void updateBackground() {
 		try {
@@ -3848,14 +3848,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 				mStatusBarView.setBackgroundColor(Color.TRANSPARENT);
 			}
 			int mSysColor = getSysColor();
-			transform(isGray(mSysColor));		
-			if (mSysColor == mStatusBarColor) {
-				updateBackgroundDelayed();
-				return;
-			} else {
+            if (mSysColor == mStatusBarColor) {
+			    if(!mMustChange) {
+                    updateBackgroundDelayed();
+                    return;
+                }
+                mMustChange = false;
+            } else {
 				mStatusBarColor = mSysColor;
 			}
-			if (mTransparent) {
+            transform(isGray(mSysColor));
+            if (mTransparent) {
 				mStatusBarView.setBackgroundColor(Color.TRANSPARENT);
 				updateBackgroundDelayed();
 				return;
@@ -3970,12 +3973,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
 		for (TextView tv : mTexts) {
 			if (tv != null) {
-				tv.setTextColor(color);
+				tv.mTransColor = false;
+                tv.setTextColor(color);
 			} else {
 				mTexts.remove(tv);
 			}
 		}
-	}
+    }
 
 	private void updateBackgroundDelayed() {
 		mHandler.postDelayed(new Runnable() {
