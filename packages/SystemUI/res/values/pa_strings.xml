@@ -20,6 +20,10 @@
     <!-- Legacy strings -->
     <!-- Content description of the data connection type HSPA+ for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
     <string name="accessibility_data_connection_HP">HSPA+</string>
+    <!-- Content description of the data connection type DC-HSPA+ for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_data_connection_DC">DC-HSPA+</string>
+    <!-- End Legacy strings -->
+
     <!--Screenshot delete -->
     <string name="screenshot_delete_action">Delete</string>
     <string name="screenshot_delete_confirmation">Screenshot deleted</string>
@@ -169,4 +173,7 @@
     <string name="quick_settings_reminder_help_title">Touch</string>
     <string name="quick_settings_reminder_noti_dismiss">Dismiss</string>
     <string name="quick_settings_reminder_help_message">Touch the empty space above to set or change the reminder. Long-press to clear the current reminder.</string>
+
+    <!-- Hide notification icons -->
+    <string name="status_bar_notification_hide_icon_packages">Hide app\'s notification icon(s)</string>
 </resources>
