@@ -47,7 +47,7 @@ public abstract class Ticker {
     private ImageSwitcher mIconSwitcher;
     private TextSwitcher mTextSwitcher;
     private float mIconScale;
-<<<<<<< HEAD
+    private PhoneStatusBar mStatusBar;
     private TickerCallback mEvent;
 
     public interface TickerCallback {
@@ -57,9 +57,6 @@ public abstract class Ticker {
     public void setUpdateEvent(TickerCallback event) {
         mEvent = event;
     }
-=======
-    private PhoneStatusBar mStatusBar;
->>>>>>> 4b45d28... Initial Chameleon Engine
 
     public static boolean isGraphicOrEmoji(char c) {
         int gc = Character.getType(c);
@@ -338,4 +335,3 @@ public abstract class Ticker {
     public abstract void tickerDone();
     public abstract void tickerHalting();
 }
-
